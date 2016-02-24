@@ -1,0 +1,11 @@
+{
+  "name": "application-name",
+  "version": "0.0.1",
+  "author": "Charles Sexton <charles.sexton@orasi.com>",
+  "dependencies": {
+    "mocha":"2.4.5",
+    "chai":"3.5.0",
+    "selenium-webdriver":"2.52.0",
+    "selenium-chromedriver":"0.0.2"
+  }
+}
