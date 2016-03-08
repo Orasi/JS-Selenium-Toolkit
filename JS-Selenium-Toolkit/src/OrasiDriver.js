@@ -1,17 +1,12 @@
-/**
- * Created by charles.sexton on 2/23/2016.
- */
+/** Created by charles.sexton on 2/23/2016 */
 var webdriver = require('selenium-webdriver');
-
+var DriverNotFoundError = require('./errors/DriverNotFoundError');
 /** required imports for Google Chrome without setting the PATH environment variable */
 var chrome = require('selenium-webdriver/chrome');
-var chromePath = require('selenium-chromedriver').path;
+var chromePath = require('chromedriver').path;
 
 var driver = null;
 
-/**
- * Base for single instances of OrasiDriver
- */
 var OrasiDriver = function()
 {
 
@@ -35,34 +30,35 @@ var OrasiDriver = function()
 
     this.get = function(url)
     {
-        driver.get(url);
+        return driver.get(url);
     };
 
-    this.getCapabilities= function() {
+    this.getCapabilities = function()
+    {
         return this.capabilities;
     };
 
-    this.findButton = function (by)
+    this.sleep = function(seconds)
     {
-        return driver.findElement(webdriver.By.name(by));
+        driver.sleep(1000 * seconds);
     };
 
-    this.findTextField = function (by)
+    this.implicitlyWait = function(seconds)
     {
-        return driver.findElement(webdriver.By.name(by));
+        driver.implicitlyWait(1000 * seconds);
     };
 
-    this.getDriver = function () {
+    this.getDriver = function()
+    {
         return driver;
-    }
-
+    };
 };
 
 
 /**
  * Factory for creating this object and assigning the appropriate browser driver without having
  * to set the Windows PATH variable for each individual driver.
- * @param info An array of the capabilities to be passed
+ * @param (Array) info The capabilities to be passed
  * @returns {OrasiDriver} An instance of this object
  */
 module.exports = function(info)
@@ -73,7 +69,6 @@ module.exports = function(info)
 
     var browserName = instance.capabilities.browserName.toLowerCase();
 
-    console.log(browserName);
     if (browserName === 'ie' || browserName === 'internet explorer')
     {
         process.chdir('node_modules');
@@ -82,6 +77,7 @@ module.exports = function(info)
             .withCapabilities(webdriver.Capabilities.ie())
             .build();
 
+        process.chdir('../');
         instance.capabilities.browserName = 'Internet Explorer';
     }
     else if (browserName === 'chrome' || browserName === 'google chrome')
@@ -105,7 +101,8 @@ module.exports = function(info)
     }
     else
     {
-        throw new DriverNotFoundException();
+        throw new DriverNotFoundError('The specified driver, ' +
+            instance.capabilities.browserName + ' is not found');
     }
 
     return instance;

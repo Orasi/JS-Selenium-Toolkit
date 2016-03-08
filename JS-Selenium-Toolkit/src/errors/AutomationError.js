@@ -4,7 +4,7 @@
 'use strict';
 
 /**
- * Automation Error
+ * Automation Testing Error
  * @param message The error message to display.
  */
 module.exports = function AutomationError(message) {
